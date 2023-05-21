@@ -1,0 +1,36 @@
+{
+  "_id": "646a9ab23fbc459ed5665e46",
+  "email": "user@example.com",
+  "firstname": "John",
+  "lastname": "Doe",
+  "password": "$2a$10$Fvq96Cp/tPVm3uap3C4dI.7VycE9o9PIyDmqvJKC8lS3UrCG.lgIe",
+  "balance": 1400,
+  "expenses": [
+    {
+      "amount": 100,
+      "category": "necesities",
+      "date": "2023-05-20T00:00:00.000Z",
+      "name": "food",
+      "_id": "646a9bfc3fbc459ed5665e64"
+    }
+  ],
+  "incomes": [
+    {
+      "amount": 1000,
+      "category": "Salary",
+      "date": "2023-05-20T00:00:00.000Z",
+      "name": "Monthly Salary",
+      "_id": "646a9b993fbc459ed5665e4a"
+    },
+    {
+      "amount": 500,
+      "category": "Salary",
+      "date": "2023-05-20T00:00:00.000Z",
+      "name": "Project",
+      "_id": "646a9bbb3fbc459ed5665e50"
+    }
+  ],
+  "createdAt": "2023-05-21T22:26:58.940Z",
+  "updatedAt": "2023-05-21T22:32:28.279Z",
+  "__v": 3
+}
