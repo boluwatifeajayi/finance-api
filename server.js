@@ -39,7 +39,7 @@ app.use(express.urlencoded({extended: false}))
 
 app.use('/api/users', require('./routes/userRoute'))
 app.use('/api/admin', require('./routes/adminRoute'))
-app.use('/api/visual', require('./routes/visualRoute'))
+app.use('/api/visuals', require('./routes/visualRoute'))
 
 
 
