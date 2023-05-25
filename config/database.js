@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const db = "mongodb+srv://bolu123:bolu123@cusm.degou.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const db = process.env.MONGO_URI;
 
 const connectDB = async () => {
   try {

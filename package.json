@@ -1,7 +1,7 @@
 {
   "name": "finance-api",
   "version": "1.0.0",
-  "description": "api for for a finance managemet app",
+  "description": "api for for a finance management app",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

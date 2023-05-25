@@ -118,8 +118,8 @@ const userSchema = new Schema({
     default: 0
   },
   savingsBalance: {
-	type: Number,
-	default: 0
+	  type: Number,
+	  default: 0
   },
   expenses: [expenseSchema],
   incomes: [incomeSchema],
@@ -130,5 +130,64 @@ const userSchema = new Schema({
 }, {
   timestamps: true
 });
+
+// Custom methods to generate reports and provide analytics
+userSchema.methods.generateExpenseReport = function() {
+  // Calculate total expenses
+  const totalExpenses = this.expenses.reduce((acc, expense) => acc + expense.amount, 0);
+
+  // Generate report
+  const report = {
+    totalExpenses,
+    expenseCount: this.expenses.length,
+    // Add more relevant fields for the expense report
+  };
+
+  return report;
+};
+
+userSchema.methods.generateBudgetReport = function() {
+  // Calculate total budget limits
+  const totalLimits = this.budgets.reduce((acc, budget) => acc + budget.limit, 0);
+
+  // Generate report
+  const report = {
+    totalLimits,
+    budgetCount: this.budgets.length,
+    // Add more relevant fields for the budget report
+  };
+
+  return report;
+};
+
+userSchema.methods.generateSavingsReport = function() {
+  // Calculate total savings amount
+  const totalSavings = this.savings.reduce((acc, saving) => acc + saving.amount, 0);
+
+  // Generate report
+  const report = {
+    totalSavings,
+    savingCount: this.savings.length,
+    // Add more relevant fields for the savings report
+  };
+
+  return report;
+};
+
+userSchema.methods.generateGoalReport = function() {
+  // Calculate total target amount and current amount of goals
+  const totalTargetAmount = this.goals.reduce((acc, goal) => acc + goal.targetAmount, 0);
+  const totalCurrentAmount = this.goals.reduce((acc, goal) => acc + goal.currentAmount, 0);
+
+  // Generate report
+  const report = {
+    totalTargetAmount,
+    totalCurrentAmount,
+    goalCount: this.goals.length,
+    // Add more relevant fields for the goal report
+  };
+
+  return report;
+};
 
 module.exports = mongoose.model('User', userSchema);
