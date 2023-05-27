@@ -20,7 +20,7 @@ router.post('/budgets', protect, createBudget);
 router.get('/budgets', protect, getAllBudgets);
 router.post('/goals', protect, createGoal);
 router.get('/goals', protect, getAllGoals);
-router.get('/user-details', protect, personalDetails);
+router.post('/user-details', protect, personalDetails);
 
 // New routes for reporting and analytics
 router.get('/reports/expenses', protect, (req, res) => {
