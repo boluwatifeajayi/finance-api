@@ -373,6 +373,28 @@ const getAllGoals = asyncHandler(async (req, res) => {
   res.status(200).json(userGoals);
 });
 
+const personalDetails = asyncHandler(async (req, res) => {
+  const { monthlyIncome, feeding, desiredMonthlySavings, mescellenious } = req.body;
+  
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+  
+  user.monthlyIncome = monthlyIncome;
+  user.feeding = feeding;
+  user.desiredMonthlySavings = desiredMonthlySavings;
+  user.mescellenious = mescellenious;
+  
+  await user.save();
+  
+  res.status(200).json({
+    message: 'Personal details updated successfully',
+    user,
+  });
+});
+
 // Generate JWT
 const generateToken = (userid) => {
   return jwt.sign({ userid }, process.env.JWT_SEC, {
@@ -397,4 +419,5 @@ module.exports = {
   getAllBudgets,
   createGoal,
   getAllGoals,
+  personalDetails,
 };

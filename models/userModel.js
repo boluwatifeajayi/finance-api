@@ -113,6 +113,22 @@ const userSchema = new Schema({
     type: String,
     required: [true, 'Please add a password']
   },
+  feeding: {
+    type: Number,
+    default: 0
+  },
+  desiredMonthlySavings: {
+    type: Number,
+    default: 0
+  },
+  mescellenious: {
+    type: Number,
+    defalt: 0
+  },
+  monthlyIncome: {
+    type: Number,
+    default: 0
+  },
   balance: {
     type: Number,
     default: 0
