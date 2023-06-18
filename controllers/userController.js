@@ -79,48 +79,77 @@ const getMe = asyncHandler(async (req, res) => {
   res.status(200).json(req.user);
 });
 
+// udate
+const updateUserInfo = asyncHandler(async (req, res) => {
+  const { firstname, lastname, email } = req.body;
+
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  user.firstname = firstname || user.firstname;
+  user.lastname = lastname || user.lastname;
+  user.email = email || user.email;
+
+  await user.save();
+
+  res.status(200).json({
+    message: 'User details updated successfully',
+    user,
+  });
+});
+
 // Create an expense
 const createExpense = asyncHandler(async (req, res) => {
-    const { amount, category, date, name } = req.body;
-  
-    // Create expense
-    const expense = {
-      amount,
-      category,
-      date,
-      name,
-    };
-  
-    // Update user's balance by subtracting the expense amount
-    const user = await User.findById(req.user._id);
-    if (!user) {
-      res.status(404);
-      throw new Error('User not found');
-    }
-  
-    user.balance -= expense.amount;
-  
-    // Add the expense to the user's expenses array
-    user.expenses.push(expense);
-  
-    await user.save();
-  
-    res.status(201).json({
-      expense,
-      balance: user.balance,
-    });
+  const { expenseAmount, expenseCategory, expenseDate, expenseTitle } = req.body;
+
+  // Create expense
+  const expense = {
+    expenseAmount,
+    expenseCategory,
+    expenseDate,
+    expenseTitle
+  };
+
+  // Update user's balance by subtracting the expense amount
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  const parsedExpenseAmount = parseFloat(expenseAmount); // Convert expense amount to a number
+  if (isNaN(parsedExpenseAmount)) {
+    res.status(400);
+    throw new Error('Invalid expense amount');
+  }
+
+  user.balance -= parsedExpenseAmount;
+
+  // Add the expense to the user's expenses array
+  user.expenses.push(expense);
+
+  await user.save();
+
+  res.status(201).json({
+    expense,
+    balance: user.balance,
   });
+});
+
   
   // Create an income
   const createIncome = asyncHandler(async (req, res) => {
-    const { amount, category, date, name } = req.body;
+    const { incomeAmount, incomeCategory, incomeDate, incomeTitle } = req.body;
   
     // Create income
     const income = {
-      amount,
-      category,
-      date,
-      name,
+      incomeAmount,
+      incomeCategory,
+      incomeDate,
+      incomeTitle
     };
   
     // Update user's balance by adding the income amount
@@ -130,7 +159,13 @@ const createExpense = asyncHandler(async (req, res) => {
       throw new Error('User not found');
     }
   
-    user.balance += income.amount;
+    const parsedIncomeAmount = parseFloat(incomeAmount); // Convert income amount to a number
+    if (isNaN(parsedIncomeAmount)) {
+      res.status(400);
+      throw new Error('Invalid income amount');
+    }
+  
+    user.balance += parsedIncomeAmount;
   
     // Add the income to the user's incomes array
     user.incomes.push(income);
@@ -142,6 +177,7 @@ const createExpense = asyncHandler(async (req, res) => {
       balance: user.balance,
     });
   });
+  
   
  // Get all incomes for the specific user
 const getAllIncomes = asyncHandler(async (req, res) => {
@@ -182,9 +218,12 @@ const getUserInfo = asyncHandler(async (req, res) => {
 const createSavings = asyncHandler(async (req, res) => {
   const { amount, name, targetDate } = req.body;
 
+  // Convert amount to a number
+  const savingsAmount = parseFloat(amount);
+
   // Create savings
   const savings = {
-    amount,
+    amount: savingsAmount,
     name,
     targetDate,
   };
@@ -197,10 +236,10 @@ const createSavings = asyncHandler(async (req, res) => {
   }
 
   // Subtract the savings amount from the user's balance
-  user.balance -= amount;
+  user.balance -= savingsAmount;
 
   // Update user's savings balance by adding the savings amount
-  user.savingsBalance += amount;
+  user.savingsBalance += savingsAmount;
 
   user.savings.push(savings);
 
@@ -297,13 +336,13 @@ const getAllBillReminders = asyncHandler(async (req, res) => {
 
 // Create a budget
 const createBudget = asyncHandler(async (req, res) => {
-  const { amount, category, period } = req.body;
+  const { limit, budgetCategory, budgetTitle  } = req.body;
 
   // Create budget
   const budget = {
-    amount,
-    category,
-    period,
+    limit,
+    budgetCategory,
+    budgetTitle
   };
 
   // Add the budget to the user's budgets array
@@ -374,7 +413,7 @@ const getAllGoals = asyncHandler(async (req, res) => {
 });
 
 const personalDetails = asyncHandler(async (req, res) => {
-  const { monthlyIncome, feeding, desiredMonthlySavings, mescellenious } = req.body;
+  const { monthlyIncome, feeding, monthlyBudget, desiredMonthlySavings, mescellenious } = req.body;
   
   const user = await User.findById(req.user._id);
   if (!user) {
@@ -383,6 +422,7 @@ const personalDetails = asyncHandler(async (req, res) => {
   }
   
   user.monthlyIncome = monthlyIncome;
+  user.monthlyBudget = monthlyBudget;
   user.feeding = feeding;
   user.desiredMonthlySavings = desiredMonthlySavings;
   user.mescellenious = mescellenious;
@@ -420,4 +460,5 @@ module.exports = {
   createGoal,
   getAllGoals,
   personalDetails,
+  updateUserInfo,
 };

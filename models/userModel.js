@@ -2,45 +2,49 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const expenseSchema = new Schema({
-  amount: {
+  expenseAmount: {
     type: Number,
     required: [true, 'Please add an amount']
   },
-  category: {
+  expenseCategory: {
     type: String,
     required: [true, 'Please add a category']
   },
-  date: {
+  expenseDate: {
     type: Date,
     default: Date.now
   },
-  name: {
+  expenseTitle: {
     type: String,
     required: [true, 'Please add a name']
   }
 });
 
 const incomeSchema = new Schema({
-  amount: {
+  incomeAmount: {
     type: Number,
     required: [true, 'Please add an amount']
   },
-  category: {
+  incomeCategory: {
     type: String,
     required: [true, 'Please add a category']
   },
-  date: {
+  incomeDate: {
     type: Date,
     default: Date.now
   },
-  name: {
+  incomeTitle: {
     type: String,
     required: [true, 'Please add a name']
   }
 });
 
 const budgetSchema = new Schema({
-  category: {
+  budgetTitle: {
+    type: String,
+    required: [true, 'Please add a category']
+  },
+  budgetCategory: {
     type: String,
     required: [true, 'Please add a category']
   },
@@ -118,6 +122,10 @@ const userSchema = new Schema({
     default: 0
   },
   desiredMonthlySavings: {
+    type: Number,
+    default: 0
+  },
+  monthlyBudget: {
     type: Number,
     default: 0
   },
