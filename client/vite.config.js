@@ -6,40 +6,30 @@ const manifestForPlugin = {
 	registerType: "prompt",
 	includeAssets: ["prime.png", "prime.png", "prime.png"],
 	manifest: {
-		name: "Prime",
-		short_name: "Prime",
-		description: "An app for manageing finances",
-		icons: [
-			{
-				src: "/prime.png",
-				sizes: "192x192",
-				type: "image/png",
-			},
-			{
-				src: "/prime.png",
-				sizes: "512x512",
-				type: "image/png",
-			},
-			{
-				src: "/prime.png",
-				sizes: "180x180",
-				type: "image/png",
-				purpose: "apple touch icon",
-			},
-			{
-				src: "/prime.png",
-				sizes: "225x225",
-				type: "image/png",
-				purpose: "any maskable",
-			},
-		],
-		theme_color: "#171717",
-		background_color: "#e8ebf2",
-		display: "standalone",
-		scope: "/",
-		start_url: "/",
-		orientation: "portrait",
-	},
+    "short_name": "Prime",
+    "name": "Prime",
+    "icons": [
+      {
+      "src": "logo1.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+      },
+      {
+      "src": "logo1.png",
+      "type": "image/png",
+      "sizes": "192x192"
+      },
+      {
+      "src": "logo1.png",
+      "type": "image/png",
+      "sizes": "512x512"
+      }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#000000",
+    "background_color": "#ffffff"
+  },
 };
 
 export default defineConfig({
