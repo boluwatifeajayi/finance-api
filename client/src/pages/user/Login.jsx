@@ -51,7 +51,7 @@ function Login() {
 
   if (isLoading) {
     return (
-      <div>
+     <div className="mt-32 text-center">
         <p>Loading...</p>
       </div>
     );

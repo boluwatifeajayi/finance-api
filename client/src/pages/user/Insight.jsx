@@ -93,7 +93,7 @@ function Insight() {
     // Function to fetch the expense report
     const fetchExpenseReport = async () => {
       try {
-        const response = await axios.get('https://primes-api.cyclic.app/api/users/reports/expenses', {
+        const response = await axios.get('https://prime-app.cyclic.app/api/users/reports/expenses', {
           headers: { Authorization: `Bearer ${user?.token}` }
         });
         setExpenseReport(response.data);
@@ -105,7 +105,7 @@ function Insight() {
     // Function to fetch the budget report
     const fetchBudgetReport = async () => {
       try {
-        const response = await axios.get('https://primes-api.cyclic.app/api/users/reports/budgets', {
+        const response = await axios.get('https://prime-app.cyclic.app/api/users/reports/budgets', {
           headers: { Authorization: `Bearer ${user?.token}` }
         });
         setBudgetReport(response.data);
@@ -117,7 +117,7 @@ function Insight() {
     // Function to fetch the savings report
     const fetchSavingsReport = async () => {
       try {
-        const response = await axios.get('https://primes-api.cyclic.app/api/users/reports/savings', {
+        const response = await axios.get('https://prime-app.cyclic.app/api/users/reports/savings', {
           headers: { Authorization: `Bearer ${user?.token}` }
         });
         setSavingsReport(response.data);

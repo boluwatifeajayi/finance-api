@@ -1,5 +1,5 @@
 import axios from 'axios'
-const API_URL = 'https://primes-api.cyclic.app/api'
+const API_URL = 'https://prime-app.cyclic.app/api'
 
 axios.defaults.withCredentials = true
 
