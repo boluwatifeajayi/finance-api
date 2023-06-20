@@ -2,7 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv').config();
 const connectDB = require('./config/database');
 const { errorHandler } = require('./middlewares/errorMiddleware');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
 const settings = 'production';
@@ -23,16 +23,7 @@ const corsOption = {
   credentials: true
 };
 
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        connectSrc: ["'self'", 'http://127.0.0.1:8000', 'ws://localhost:42877/',]
-      }
-    }
-  })
-);
+
 app.use(cors(corsOption));
 
 if (settings === 'development') {
