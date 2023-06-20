@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = "http://localhost:4070/api/users";
+const API_URL = "https://primes-api.cyclic.app/api/users";
 axios.defaults.withCredentials = true;
 
 // register user

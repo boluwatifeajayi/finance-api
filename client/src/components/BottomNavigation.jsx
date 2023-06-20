@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaHome, FaMoneyBillAlt, FaPiggyBank, FaUser } from 'react-icons/fa';
+import { FaHome, FaMoneyBillAlt, FaPiggyBank, FaUser, FaChartBar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const BottomNavigation = () => {
@@ -17,9 +17,9 @@ const BottomNavigation = () => {
         <FaPiggyBank className="text-xl" />
         <span className="text-xs mt-1">Savings</span>
       </Link>
-      <Link to="/account" className="flex flex-col items-center text-gray-600">
-        <FaUser className="text-xl" />
-        <span className="text-xs mt-1">Accounts</span>
+      <Link to="/insight" className="flex flex-col items-center text-gray-600">
+        <FaChartBar className="text-xl" />
+        <span className="text-xs mt-1">Insights</span>
       </Link>
     </nav>
   );

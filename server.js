@@ -4,7 +4,7 @@ const connectDB = require('./config/database');
 const {errorHandler} = require('./middlewares/errorMiddleware')
 const helmet = require("helmet");
 const cors = require('cors')
-// const path = require('path')
+const path = require('path')
 const settings = "production"
 const morgan = require('morgan')
 
@@ -42,10 +42,24 @@ app.use('/api/visuals', require('./routes/visualRoute'))
 
 
 
+const dirname = path.resolve()
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
-app.get('/', (req, res) => {
-  res.send('API is running....')
-})
+app.use('/uploads', express.static(path.join(dirname, '/uploads')))
+
+if (settings === 'production') {
+  app.use(express.static(path.join(__dirname, '/client/dist')))
+
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'client', 'dist', 'index.html'))
+  )
+  console.log('hello')
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running....')
+  }) }
+
+
 
 
 

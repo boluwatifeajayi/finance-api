@@ -85,8 +85,10 @@ function Budget() {
       <p className="text-white opacity-75 mb-8 text-xl">Over spend No More with Budgets</p>
 
       <div className="flex justify-end mb-8">
-        <FaUser className="text-white  opacity-75 text-lg cursor-pointer" />
-        <FaSearch className="text-white  opacity-75 text-lg ml-7 cursor-pointer" />
+        <Link to="/account">
+          <FaUser className="text-white  opacity-75 text-lg cursor-pointer" />
+        </Link>
+        
       </div>
 
       <div className="bg-blue-800 rounded-lg p-8">
@@ -149,7 +151,7 @@ function Budget() {
       <p className="text-md opacity-75 text-white mt-4">Budgets</p>
 
       {budgets?.map((budget) => (
-        <div className="bg-blue-500 text-white rounded-lg mt-4 p-4 flex flex-col" key={budget._id}>
+        <div className="bg-blue-600 text-white rounded-lg mt-4 p-4 flex flex-col" key={budget._id}>
           <p className="text-md mb-2 font-bold">{budget.budgetTitle}</p>
           <p className="text-md mb-2">You Have Spent</p>
           <p className="text-xl mb-4">₦0 Out Of ₦{budget.limit}</p>
@@ -163,7 +165,7 @@ function Budget() {
 
       <p className="text-md opacity-75 text-white mt-4">Transactions</p>
 
-      <div className="bg-blue-500 text-white rounded-lg mt-4 p-4">
+      <div className="bg-blue-600 text-white rounded-lg mt-4 p-4">
         <div className="flex justify-between items-center mb-2">
           <div>
             <p className="text-white font-bold">Transaction</p>

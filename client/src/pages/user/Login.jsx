@@ -58,8 +58,8 @@ function Login() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen pt-12 bg-gray-100 px-4 md:px-72">
-      <h1 className="text-3xl font-bold text-blue-700 mt-8">Welcome Back</h1>
+    <div className="flex flex-col min-h-screen pt-20 bg-gray-100 px-4 md:px-72">
+      <h1 className="text-3xl font-bold text-blue-700 mt-20">Welcome Back</h1>
       <p className="text-gray-700 mt-3 mb-8">Complete the sign up to get started</p>
 
       <form onSubmit={onSubmit} className="bg-transparent">
@@ -95,7 +95,7 @@ function Login() {
         </button>
 
         <div>
-          Already have an account?{' '}
+          don't have an account?{' '}
           <Link to="/register" className="text-blue-700 hover:underline">
             Register Here
           </Link>

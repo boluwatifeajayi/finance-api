@@ -95,8 +95,10 @@ function Savings() {
       <p className="text-white opacity-75 mb-8 text-2xl">Savings</p>
 
       <div className="flex justify-end mb-8">
-        <FaUser className="text-white  opacity-75 text-lg cursor-pointer" />
-        <FaSearch className="text-white  opacity-75 text-lg ml-7 cursor-pointer" />
+        <Link to="/account">
+          <FaUser className="text-white  opacity-75 text-lg cursor-pointer" />
+        </Link>
+        
       </div>
 
       <div className="bg-blue-800 rounded-lg p-8">
@@ -191,7 +193,7 @@ function Savings() {
           <br />
           {/* <span className="text-white text-md opacity-75">Get points for sorting your transactions</span> */}
         </p>
-        <div className="bg-blue-500 rounded-full p-2 ml-auto">
+        <div className="bg-blue-600 rounded-full p-2 ml-auto">
           <FaArrowRight className="text-white" />
         </div>
       </div>
@@ -201,7 +203,7 @@ function Savings() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Render the savings section cards dynamically */}
             {savings.map((saving) => (
-              <div key={saving.id} className="bg-blue-500 rounded-lg p-4 flex items-center justify-between">
+              <div key={saving.id} className="bg-blue-600 rounded-lg p-4 flex items-center justify-between">
                 <div>
                   <p className="font-semibold text-white">{saving.name}</p>
                   <p className="text-green-500 font-bold">N{saving.amount}</p>
@@ -215,7 +217,7 @@ function Savings() {
 
       {/* <p className="text-md opacity-75 text-white mt-4">Savings History</p> */}
 
-      {/* <div className="bg-blue-500 text-white rounded-lg mt-4 p-4">
+      {/* <div className="bg-blue-600 text-white rounded-lg mt-4 p-4">
         <div className="flex justify-between items-center mb-2">
         </div>
         <div className="flex justify-between items-center mb-2">
