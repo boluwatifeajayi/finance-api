@@ -14,7 +14,7 @@ connectDB()
 const port = process.env.PORT || 4070
 const app = express()
 
-const whiteList = ["http://localhost:3000", "http://localhost:3000","http://localhost:3001", "https://testt-orpin.vercel.app",];
+const whiteList = ["http://localhost:3000", "https://primefinance.netlify.app", "http://localhost:3000","http://localhost:3001", "https://testt-orpin.vercel.app",];
 const corsOption = {
   origin: whiteList,
   credentials: true,
