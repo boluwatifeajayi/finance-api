@@ -22,7 +22,8 @@ function Register() {
 
   useEffect(() => {
     if (isError) {
-      toast.error("account already exsists");
+      console.log("account already exsists");
+      alert("account already exsists")
     }
     if (isSuccess || user) {
       navigate('/setup');

@@ -12,7 +12,7 @@ const BillRemindersModal = ({ closeModal }) => {
 
   useEffect(() => {
     if (isError) {
-      toast.error("we ran into a problem");
+      console.log("we ran into a problem");
     }
 
     dispatch(getAllBillReminders());

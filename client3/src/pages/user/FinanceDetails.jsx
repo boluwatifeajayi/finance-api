@@ -23,7 +23,7 @@ function FinanceDetails() {
 
   useEffect(() => {
     if (isError) {
-      toast.error("There was an error");
+      console.log("There was an error");
     }
     // if (isSuccess || user) {
     //   navigate('/setup');
@@ -89,7 +89,7 @@ function FinanceDetails() {
             <h1 className="text-2xl font-bold text-blue-700 mb-4">Monthly Income (NGN)</h1>
             <input
               id="income"
-              type="text"
+              type="number"
               name="monthlyIncome"
               value={monthlyIncome}
               onChange={handleInputChange}
@@ -105,7 +105,7 @@ function FinanceDetails() {
             <h1 className="text-2xl font-bold text-blue-700 mb-4">Feeding Money (NGN)</h1>
             <input
               id="feedingMoney"
-              type="text"
+              type="number"
               name="feedingMoney"
               value={feedingMoney}
               onChange={handleInputChange}
@@ -121,7 +121,7 @@ function FinanceDetails() {
             <h1 className="text-2xl font-bold text-blue-700 mb-4">Desired Savings (NGN)</h1>
             <input
               id="desiredMonthlySavings"
-              type="text"
+              type="number"
               name="desiredMonthlySavings"
               value={desiredMonthlySavings}
               onChange={handleInputChange}
@@ -137,7 +137,7 @@ function FinanceDetails() {
               <h1 className="text-2xl font-bold text-blue-700 mb-4">Monthly Budget(NGN)</h1>
               <input
                 id="monthlyBudget"
-                type="text"
+                type="number"
                 name="monthlyBudget"
                 value={monthlyBudget}
                 onChange={handleInputChange}
@@ -153,7 +153,7 @@ function FinanceDetails() {
             <h1 className="text-2xl font-bold text-blue-700 mb-4">mescellenious (NGN)</h1>
             <input
               id="mescellenious"
-              type="text"
+              type="number"
               name="mescellenious"
               value={mescellenious}
               onChange={handleInputChange}

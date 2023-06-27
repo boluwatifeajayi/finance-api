@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, getMe, createExpense, createIncome, getAllIncomes, getAllExpenses, getUserInfo, createSavings, getAllSavings, createBillReminder, getAllBillReminders, createBudget, getAllBudgets, createGoal, getAllGoals, personalDetails, updateUserInfo } = require('../controllers/userController');
+const { registerUser, loginUser, getMe, createExpense, createIncome, getAllIncomes, getAllExpenses, getUserInfo, createSavings, getAllSavings, createBillReminder, getAllBillReminders, createBudget, getAllBudgets, createGoal, getAllGoals, personalDetails, updateUserInfo, savingsInclined, feedingInclined } = require('../controllers/userController');
 const { protect } = require('../middlewares/userAuthMiddleware');
 
 // Existing routes
@@ -21,7 +21,11 @@ router.get('/budgets', protect, getAllBudgets);
 router.post('/goals', protect, createGoal);
 router.get('/goals', protect, getAllGoals);
 router.post('/user-details', protect, personalDetails);
-router.put('/user-update', protect, updateUserInfo); // Add this route to handle updating user details
+router.put('/user-update', protect, updateUserInfo);
+// New routes for handling savings and feeding inclinations
+router.put('/savings-inclined', protect, savingsInclined);
+router.put('/feeding-inclined', protect, feedingInclined);
+
 
 // New routes for reporting and analytics
 router.get('/reports/expenses', protect, (req, res) => {
@@ -47,5 +51,6 @@ router.get('/reports/goals', protect, (req, res) => {
   const goalReport = user.generateGoalReport();
   res.json(goalReport);
 });
+
 
 module.exports = router;

@@ -4,7 +4,7 @@ import useri from '../../media/Group 20104.png';
 import BottomNavigation from '../../components/BottomNavigation';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getUserInfo, createIncome, createExpense, reset, getAllExpenses, getAllIncomes, getAllBillReminders } from '../../features/user/userSlice';
+import { getUserInfo, createIncome, createExpense, reset, getAllExpenses, getAllIncomes, getAllBillReminders, savingsInclined, feedingInclined, } from '../../features/user/userSlice';
 import AddBillModal from '../../components/AddBillModal';
 import BillRemindersModal from '../../components/BillRemindersModal';
 import { toast } from 'react-toastify';
@@ -15,10 +15,10 @@ function Home() {
   const [showAddIncomeModal, setShowAddIncomeModal] = useState(false);
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
   const [incomeTitle, setIncomeTitle] = useState('');
-  const [incomeCategory, setIncomeCategory] = useState('');
+  const [incomeCategory, setIncomeCategory] = useState('hhh');
   const [incomeAmount, setIncomeAmount] = useState(0);
   const [expenseTitle, setExpenseTitle] = useState('');
-  const [expenseCategory, setExpenseCategory] = useState('');
+  const [expenseCategory, setExpenseCategory] = useState('jjj');
   const [expenseAmount, setExpenseAmount] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bills, setBills] = useState([]);
@@ -36,7 +36,11 @@ function Home() {
 
   useEffect(() => {
     if (isError) {
-      toast.error("we ran into a problem");
+      console.log("we ran into a problem");
+    }
+
+    if(!user){
+      navigate('/login')
     }
 
     dispatch(getUserInfo());
@@ -65,11 +69,13 @@ function Home() {
     dispatch(createIncome(incomeData))
       .then(() => {
         setShowAddIncomeModal(false);
+        dispatch(savingsInclined())
+
         setIncomeTitle('');
         setIncomeCategory('');
         setIncomeAmount('');
         toast.success('Income created successfully');
-        window.location.reload();
+        navigate("/login")
         const newBill = {
           id: Date.now(),
           name: expenseTitle,
@@ -79,7 +85,7 @@ function Home() {
         setBills([...bills, newBill]);
       })
       .catch(() => {
-        toast.error('Failed to create income');
+        console.log('Failed to create income');
       });
   };
 
@@ -100,7 +106,7 @@ function Home() {
         setExpenseCategory('');
         setExpenseAmount('');
         toast.success('Expense created successfully');
-        window.location.reload();
+        navigate("/login")
         const newBill = {
           id: Date.now(),
           name: expenseTitle,
@@ -110,7 +116,7 @@ function Home() {
         setBills([...bills, newBill]);
       })
       .catch(() => {
-        toast.error('Failed to create expense');
+        console.log('Failed to create expense');
       });
   };
 
@@ -215,6 +221,12 @@ function Home() {
     setShowAddExpenseModal(false);
   };
 
+  if(isLoading){
+    return <div className="flex items-center justify-center h-screen bg-blue-700">
+    <p className="text-white text-3xl font-bold">Loading PRIME...</p>
+  </div>
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-blue-700 p-4 pb-40 md:p-8">
       <h1 className="text-2xl text-white mb-2 mt-10">
@@ -271,18 +283,12 @@ function Home() {
             <form onSubmit={handleIncomeSubmit}>
               <input
                 type="text"
-                placeholder="Title"
+                placeholder="Name "
                 value={incomeTitle}
                 onChange={(e) => setIncomeTitle(e.target.value)}
                 className="bg-gray-100 px-4 py-2 rounded-lg mb-2 w-full"
               />
-              <input
-                type="text"
-                placeholder="Category"
-                value={incomeCategory}
-                onChange={(e) => setIncomeCategory(e.target.value)}
-                className="bg-gray-100 px-4 py-2 rounded-lg mb-2 w-full"
-              />
+              
               <input
                 type="number"
                 placeholder="Amount"
@@ -311,18 +317,12 @@ function Home() {
             <form onSubmit={handleExpenseSubmit}>
               <input
                 type="text"
-                placeholder="Title"
+                placeholder="Name "
                 value={expenseTitle}
                 onChange={(e) => setExpenseTitle(e.target.value)}
                 className="bg-gray-100 px-4 py-2 rounded-lg mb-2 w-full"
               />
-              <input
-                type="text"
-                placeholder="Category"
-                value={expenseCategory}
-                onChange={(e) => setExpenseCategory(e.target.value)}
-                className="bg-gray-100 px-4 py-2 rounded-lg mb-2 w-full"
-              />
+              
               <input
                 type="number"
                 placeholder="Amount"
@@ -357,32 +357,74 @@ function Home() {
 
       <p className="text-md opacity-75 text-white mt-4">My Budgets</p>
 
-      <Link to='/budget'>
+  
+
+{userDetails?.savingsFeeding != 0 && 
+  <Link to='/budget'>
   <div className="bg-blue-600 text-white rounded-lg mt-4 p-4 flex flex-col">
     <p className="text-md mb-2">You have Spent</p>
     <p className="text-3xl font-bold mb-4">₦ {totalExpenses?.toLocaleString()}</p>
-    <p className="text-sm mb-4 opacity-75">Of ₦{userDetails.monthlyBudget?.toLocaleString()} budgeted</p>
+    <p className="text-sm mb-4 opacity-75">Of ₦{userDetails.savingsFeeding?.toLocaleString()} budgeted</p>
     <div className="relative h-2 bg-blue-900 rounded-full">
-      <div className={`absolute inset-0 ${getProgressColor(totalExpenses, userDetails.monthlyBudget)} rounded-full`} style={{ width: `${(totalExpenses / userDetails.monthlyBudget) * 100}%`, height: '100%' }}></div>
+      <div className="absolute inset-0 rounded-full" style={{ width: '100%', height: '100%' }}>
+        <div className={`absolute left-0 top-0 ${getProgressColor(totalExpenses, userDetails.savingsFeeding)} rounded-full`} style={{ width: `${Math.min((totalExpenses / userDetails.savingsFeeding) * 100, 100)}%`, height: '100%' }}></div>
+      </div>
     </div>
-    <p className="mt-4 text-md">{getProgressMessage(totalExpenses, userDetails.monthlyBudget)}</p>
+    <p className="mt-4 text-md">{getProgressMessage(totalExpenses, userDetails.savingsFeeding)}</p>
   </div>
 </Link>
+}
+
+{userDetails?.feedingBudget != 0 && 
+  <Link to='/budget'>
+  <div className="bg-blue-600 text-white rounded-lg mt-4 p-4 flex flex-col">
+    <p className="text-md mb-2">You have Spent</p>
+    <p className="text-3xl font-bold mb-4">₦ {totalExpenses?.toLocaleString()}</p>
+    <p className="text-sm mb-4 opacity-75">Of ₦{userDetails.feedingBudget?.toLocaleString()} budgeted</p>
+    <div className="relative h-2 bg-blue-900 rounded-full">
+      <div className="absolute inset-0 rounded-full" style={{ width: '100%', height: '100%' }}>
+        <div className={`absolute left-0 top-0 ${getProgressColor(totalExpenses, userDetails.feedingBudget)} rounded-full`} style={{ width: `${Math.min((totalExpenses / userDetails.feedingBudget) * 100, 100)}%`, height: '100%' }}></div>
+      </div>
+    </div>
+    <p className="mt-4 text-md">{getProgressMessage(totalExpenses, userDetails.feedingBudget)}</p>
+  </div>
+  </Link>
+}
+
+
 
 
       <p className="text-md opacity-75 text-white mt-4">My Savings</p>
-
-      <Link to='/savings'>
+      {userDetails?.savingFeeding != 0 && 
+  <Link to='/savings'>
   <div className="bg-blue-600 text-white rounded-lg mt-4 p-4 flex flex-col">
     <p className="text-md mb-2">You have Saved</p>
     <p className="text-3xl font-bold mb-4">₦{userDetails.savingsBalance?.toLocaleString()}</p>
-    <p className="text-sm mb-4 opacity-75">Of ₦{userDetails.desiredMonthlySavings?.toLocaleString()}</p>
+    <p className="text-sm mb-4 opacity-75">Of ₦{userDetails.savingsBudget?.toLocaleString()}</p>
     <div className="relative h-2 bg-blue-900 rounded-full">
-      <div className="absolute inset-0 bg-green-500 rounded-full" style={{ width: `${(userDetails.savingsBalance / userDetails.desiredMonthlySavings) * 100}%`, height: '100%' }}></div>
+      <div className="absolute inset-0 bg-green-500 rounded-full" style={{ width: `${(userDetails.savingsBalance / userDetails.savingsBudget) * 100}%`, height: '100%' }}></div>
     </div>
     <p className="mt-4 text-md">Things are looking good, keep it up 👍</p>
   </div>
 </Link>
+
+      }
+
+
+{userDetails?.feedingSavings != 0 && 
+  <Link to='/savings'>
+  <div className="bg-blue-600 text-white rounded-lg mt-4 p-4 flex flex-col">
+    <p className="text-md mb-2">You have Saved</p>
+    <p className="text-3xl font-bold mb-4">₦{userDetails.savingsBalance?.toLocaleString()}</p>
+    <p className="text-sm mb-4 opacity-75">Of ₦{userDetails.feedingSavings?.toLocaleString()}</p>
+    <div className="relative h-2 bg-blue-900 rounded-full">
+      <div className="absolute inset-0 bg-green-500 rounded-full" style={{ width: `${(userDetails.savingsBalance / userDetails.feedingSavings) * 100}%`, height: '100%' }}></div>
+    </div>
+    <p className="mt-4 text-md">Things are looking good, keep it up 👍</p>
+  </div>
+</Link>
+
+      }
 
 
       <p className="text-md opacity-75 text-white mt-4">Transactions</p>

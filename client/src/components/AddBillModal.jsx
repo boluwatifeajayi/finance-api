@@ -20,10 +20,10 @@ const AddBillModal = ({ addBill, closeModal }) => {
       .then(() => {
         toast.success('Reminder created successfully');
         closeModal();
-        window.location.reload();
+        navigate("/login")
       })
       .catch(() => {
-        toast.error('Failed to create reminder');
+        console.log('Failed to create reminder');
       });
   };
 

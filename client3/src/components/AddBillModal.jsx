@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { createBillReminder } from '../features/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
 
 const AddBillModal = ({ addBill, closeModal }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -20,10 +22,10 @@ const AddBillModal = ({ addBill, closeModal }) => {
       .then(() => {
         toast.success('Reminder created successfully');
         closeModal();
-        window.location.reload();
+        navigate("/login")
       })
       .catch(() => {
-        toast.error('Failed to create reminder');
+        console.log('Failed to create reminder');
       });
   };
 

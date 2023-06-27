@@ -15,7 +15,7 @@ const Account = () => {
 
   useEffect(() => {
     if (isError) {
-      toast.error("we ran into a problem");
+      console.log("we ran into a problem");
     }
 
     dispatch(getUserInfo());

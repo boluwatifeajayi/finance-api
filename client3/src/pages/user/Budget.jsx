@@ -24,7 +24,7 @@ function Budget() {
 
   useEffect(() => {
     if (isError) {
-      toast.error('We ran into a problem');
+      console.log('We ran into a problem');
     }
 
     const fetchData = async () => {
@@ -35,7 +35,7 @@ function Budget() {
         await dispatch(getAllIncomes());
         await dispatch(getUserInfo());
       } catch (error) {
-        toast.error('Failed to fetch data');
+        console.log('Failed to fetch data');
       }
     };
 
@@ -57,11 +57,11 @@ function Budget() {
       .then(() => {
         setShowAddIncomeModal(false);
         toast.success('Budget created successfully');
-        // window.location.reload(); // Not recommended, better to update state
+        // navigate("/login") // Not recommended, better to update state
         // You can dispatch an action here to update the budgets state
       })
       .catch(() => {
-        toast.error('Failed to create budget');
+        console.log('Failed to create budget');
       });
   };
 

@@ -22,7 +22,7 @@ function Welcome() {
     const interval = setInterval(() => {
       setTimer((prevTimer) => prevTimer + 1);
       if (timer === 5) {
-        navigate('/register');
+        navigate('/login');
         clearInterval(interval);
       }
     }, 1000);

@@ -16,6 +16,7 @@ import Contact from './pages/user/Contact';
 import Help from './pages/user/Help';
 import PrivacyPolicy from './pages/user/PrivacyPolicy';
 import Update from './pages/user/Update';
+import Setup from './pages/user/setUp';
 
 
 
@@ -41,6 +42,7 @@ function App() {
             <Route path="/help" element={<Help/>}/>
             <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
             <Route path="/update" element={<Update/>}/>
+            <Route path="/set" element={<Setup/>}/>
           </Routes>
         </div>
       </Router>

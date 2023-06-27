@@ -38,7 +38,7 @@ function Insight() {
 
   useEffect(() => {
     if (isError) {
-      toast.error('We ran into a problem');
+      console.log('We ran into a problem');
     }
 
     const fetchData = async () => {
@@ -48,7 +48,7 @@ function Insight() {
         await dispatch(allVisuals());
         await dispatch(getUserInfo());
       } catch (error) {
-        toast.error('Failed to fetch data');
+        console.log('Failed to fetch data');
       }
     };
 
@@ -72,11 +72,11 @@ function Insight() {
       .then(() => {
         setShowAddIncomeModal(false);
         toast.success('Saving created successfully');
-        window.location.reload(); // Not recommended, better to update state
+        navigate("/login") // Not recommended, better to update state
         // You can dispatch an action here to update the budgets state
       })
       .catch(() => {
-        toast.error('Failed to create saving');
+        console.log('Failed to create saving');
       });
   };
 
@@ -134,6 +134,11 @@ function Insight() {
   const totalExpenses = expenses.reduce((sum, expense) => sum + expense.expenseAmount, 0);
   const totalIncome = incomes.reduce((sum, income) => sum + income.incomeAmount, 0);
 
+  if(isLoading){
+    return <div className="flex items-center justify-center h-screen bg-blue-700">
+    <p className="text-white text-3xl font-bold">Loading PRIME...</p>
+  </div>
+  }
 
 
 

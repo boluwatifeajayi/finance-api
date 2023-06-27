@@ -34,6 +34,13 @@ const Article = () => {
   
   
     const timeDiff = moment(createdAt).fromNow();
+
+    if(isLoading){
+      return <div className="flex items-center justify-center h-screen bg-blue-700">
+      <p className="text-white text-3xl font-bold">Loading PRIME...</p>
+    </div>
+    }
+  
   
 
   return (

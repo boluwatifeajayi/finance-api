@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { FaEdit, FaUser, FaCog, FaQuestionCircle, FaPhoneAlt, FaChevronRight, FaBook } from 'react-icons/fa';
+import { FaEdit, FaUser, FaCog, FaQuestionCircle, FaPhoneAlt, FaChevronRight, FaBook, FaArrowLeft } from 'react-icons/fa';
 import BottomNavigation from '../../components/BottomNavigation';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getUserInfo, createIncome, createExpense, reset, getAllExpenses, getAllIncomes } from '../../features/user/userSlice';
+import { getUserInfo, createIncome, createExpense, reset, getAllExpenses, getAllIncomes, logout } from '../../features/user/userSlice';
 import { toast } from 'react-toastify';
 
 const Account = () => {
@@ -15,7 +15,7 @@ const Account = () => {
 
   useEffect(() => {
     if (isError) {
-      toast.error("we ran into a problem");
+      console.log("we ran into a problem");
     }
 
     dispatch(getUserInfo());
@@ -24,6 +24,13 @@ const Account = () => {
       dispatch(reset());
     };
   }, []);
+
+  if(isLoading){
+    return <div className="flex items-center justify-center h-screen bg-blue-700">
+    <p className="text-white text-3xl font-bold">Loading PRIME...</p>
+  </div>
+  }
+
 
 
   return (
@@ -73,6 +80,13 @@ const Account = () => {
                 <FaPhoneAlt className="text-gray-500" />
                 <span className="ml-3">Contact</span>
               </Link>
+              <FaChevronRight className="text-gray-400" />
+            </li>
+            <li className="flex items-center justify-between py-4 px-6">
+            <span onClick={() => { dispatch(logout()); navigate('/login'); }} className="flex items-center">
+              <FaArrowLeft className="text-gray-500" />
+              <span className="ml-3">Logout</span>
+            </span>
               <FaChevronRight className="text-gray-400" />
             </li>
           </ul>

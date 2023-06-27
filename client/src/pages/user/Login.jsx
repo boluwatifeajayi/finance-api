@@ -22,7 +22,7 @@ function Login() {
 
   useEffect(() => {
     if (isError) {
-      toast.error("invalid credentials");
+      console.log("invalid credentials");
     }
     if (isSuccess || user) {
       navigate('/home');
@@ -49,13 +49,12 @@ function Login() {
     dispatch(login(userData));
   };
 
-  if (isLoading) {
-    return (
-     <div className="mt-32 text-center">
-        <p>Loading...</p>
-      </div>
-    );
+  if(isLoading){
+    return <div className="flex items-center justify-center h-screen bg-blue-700">
+    <p className="text-white text-3xl font-bold">Loading PRIME...</p>
+  </div>
   }
+
 
   return (
     <div className="flex flex-col min-h-screen pt-20 bg-gray-100 px-4 md:px-72">

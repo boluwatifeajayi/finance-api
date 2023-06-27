@@ -7,8 +7,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getUserInfo, createIncome, createExpense, reset, getAllExpenses, getAllIncomes, createSavings, getAllSavings } from '../../features/user/userSlice';
 import { toast } from 'react-toastify';
 
+
 function Savings() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showAddIncomeModal, setShowAddIncomeModal] = useState(false);
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
   const [name, setName] = useState('');
@@ -28,7 +30,7 @@ function Savings() {
 
   useEffect(() => {
     if (isError) {
-      toast.error('We ran into a problem');
+      console.log('We ran into a problem');
     }
 
     const fetchData = async () => {
@@ -37,7 +39,7 @@ function Savings() {
         await dispatch(getAllSavings());
         await dispatch(getUserInfo());
       } catch (error) {
-        toast.error('Failed to fetch data');
+        console.log('Failed to fetch data');
       }
     };
 
@@ -61,11 +63,11 @@ function Savings() {
       .then(() => {
         setShowAddIncomeModal(false);
         toast.success('Saving created successfully');
-        window.location.reload(); // Not recommended, better to update state
+        navigate("/login") // Not recommended, better to update state
         // You can dispatch an action here to update the budgets state
       })
       .catch(() => {
-        toast.error('Failed to create saving');
+        console.log('Failed to create saving');
       });
   };
 

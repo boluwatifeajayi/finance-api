@@ -413,7 +413,7 @@ const getAllGoals = asyncHandler(async (req, res) => {
 });
 
 const personalDetails = asyncHandler(async (req, res) => {
-  const { monthlyIncome, feeding, monthlyBudget, desiredMonthlySavings, mescellenious } = req.body;
+  const { monthlyIncome, feeding, monthlyBudget, desiredMonthlySavings, pref, mescellenious } = req.body;
   
   const user = await User.findById(req.user._id);
   if (!user) {
@@ -422,18 +422,69 @@ const personalDetails = asyncHandler(async (req, res) => {
   }
   
   user.monthlyIncome = monthlyIncome;
+  user.pref = pref;
   user.monthlyBudget = monthlyBudget;
   user.feeding = feeding;
   user.desiredMonthlySavings = desiredMonthlySavings;
   user.mescellenious = mescellenious;
+
   
   await user.save();
   
   res.status(200).json({
     message: 'Personal details updated successfully',
+    user
+  });
+});
+
+// Savings Inclined
+const savingsInclined = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  const monthlyIncome = user.monthlyIncome;
+
+  const savingsBudget = 0.6 * monthlyIncome;
+  const savingsFeeding = 0.4 * monthlyIncome;
+
+  user.savingsBudget = savingsBudget;
+  user.savingsFeeding = savingsFeeding;
+
+  await user.save();
+
+  res.status(200).json({
+    message: 'Savings inclined updated successfully',
     user,
   });
 });
+
+// Feeding Inclined
+const feedingInclined = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  const monthlyIncome = user.monthlyIncome;
+
+  const feedingBudget = 0.85 * monthlyIncome;
+  const feedingSavings = 0.15 * monthlyIncome;
+
+  user.feedingBudget = feedingBudget;
+  user.feedingSavings = feedingSavings;
+
+  await user.save();
+
+  res.status(200).json({
+    message: 'Feeding inclined updated successfully',
+    user,
+  });
+});
+
 
 // Generate JWT
 const generateToken = (userid) => {
@@ -461,4 +512,6 @@ module.exports = {
   getAllGoals,
   personalDetails,
   updateUserInfo,
+  savingsInclined,
+  feedingInclined,
 };

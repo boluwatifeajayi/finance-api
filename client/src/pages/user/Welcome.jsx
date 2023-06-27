@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSpinner } from 'react-icons/fa';
+import spin from '../../media/spin.gif'
 
 function Welcome() {
   const [timer, setTimer] = useState(0);
@@ -22,7 +23,7 @@ function Welcome() {
     const interval = setInterval(() => {
       setTimer((prevTimer) => prevTimer + 1);
       if (timer === 5) {
-        navigate('/register');
+        navigate('/login');
         clearInterval(interval);
       }
     }, 1000);
@@ -40,11 +41,13 @@ function Welcome() {
     // </div>
   <div className="flex flex-col min-h-screen bg-blue-700 p-4 pb-40 md:p-8 items-center justify-center">
     <p className='text-5xl text-center text-white font-bold'>PR!ME</p>
-    <p className='text-lg opacity-75 text-white text-center mt-6'>"Wealth is not about having a lot of money; it's about having a lot of options."</p>
+    <span className='text-lg opacity-75 text-white text-center mt-6'>
+      <img className="w-12 h-12" src={spin}/>
+    </span>
     <div className="mt-6">
-    <div className="spinner text-white text-lg">
+    {/* <div className="spinner text-white text-lg">
         <FaSpinner/>
-    </div>
+    </div> */}
   </div>
   </div>
   );

@@ -36,7 +36,7 @@ function Home() {
 
   useEffect(() => {
     if (isError) {
-      toast.error("we ran into a problem");
+      console.log("we ran into a problem");
     }
 
     dispatch(getUserInfo());
@@ -44,6 +44,8 @@ function Home() {
     dispatch(getAllIncomes());
     dispatch(getAllBillReminders());
     dispatch(getUserInfo());
+    dispatch(getUserInfo());
+    
 
 
     return () => {
@@ -69,7 +71,7 @@ function Home() {
         setIncomeCategory('');
         setIncomeAmount('');
         toast.success('Income created successfully');
-        window.location.reload();
+        navigate("/login")
         const newBill = {
           id: Date.now(),
           name: expenseTitle,
@@ -79,7 +81,7 @@ function Home() {
         setBills([...bills, newBill]);
       })
       .catch(() => {
-        toast.error('Failed to create income');
+        console.log('Failed to create income');
       });
   };
 
@@ -100,7 +102,7 @@ function Home() {
         setExpenseCategory('');
         setExpenseAmount('');
         toast.success('Expense created successfully');
-        window.location.reload();
+        navigate("/login")
         const newBill = {
           id: Date.now(),
           name: expenseTitle,
@@ -110,7 +112,7 @@ function Home() {
         setBills([...bills, newBill]);
       })
       .catch(() => {
-        toast.error('Failed to create expense');
+        console.log('Failed to create expense');
       });
   };
 

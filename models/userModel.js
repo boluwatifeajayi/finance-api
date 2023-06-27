@@ -94,7 +94,7 @@ const savingsSchema = new Schema({
     required: [true, 'Please add a target amount']
   },
   targetDate: {
-    type: Date,
+    type: String,
     required: [true, 'Please add a date']
   }
 });
@@ -125,6 +125,7 @@ const userSchema = new Schema({
     type: Number,
     default: 0
   },
+
   monthlyBudget: {
     type: Number,
     default: 0
@@ -133,7 +134,28 @@ const userSchema = new Schema({
     type: Number,
     defalt: 0
   },
+
   monthlyIncome: {
+    type: Number,
+    default: 0
+  },
+  pref: {
+    type: String,
+    default: "savings"
+  },
+  savingsBudget: {
+    type:Number,
+    default: 0
+  },
+  savingsFeeding: {
+    type:Number,
+    default: 0
+  },
+  feedingBudget: {
+    type:Number,
+    default: 0
+  },
+  feedingSavings: {
     type: Number,
     default: 0
   },

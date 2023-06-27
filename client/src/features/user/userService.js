@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const API_URL = "https://prime-app.cyclic.app/api/users";
+// const API_URL = "http://localhost:4070/api/users";
 axios.defaults.withCredentials = true;
 
 // register user
@@ -217,6 +218,40 @@ const addPersonalDetails = async (userData, token) => {
   return response.data;
 };
 
+// savings inclined
+
+const savingsInclined = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.put(`${API_URL}/savings-inclined`, null, config);
+
+  return response.data;
+};
+
+// savings inclined
+
+const feedingInclined = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.put(`${API_URL}/feeding-inclined`, null, config);
+
+  return response.data;
+};
+
+// logout
+const logout = () => {
+	localStorage.removeItem('user')
+  console.log("hello")
+}
+
+
+
 const userService = {
   register,
   login,
@@ -236,9 +271,9 @@ const userService = {
   getAllGoals,
   updateUserInfo,
   addPersonalDetails,
-  logout: () => {
-    localStorage.removeItem('user');
-  },
+  feedingInclined,
+  savingsInclined,
+  logout
 };
 
 export default userService;

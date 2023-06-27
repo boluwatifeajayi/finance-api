@@ -196,6 +196,36 @@ export const addPersonalDetails = createAsyncThunk('user/getPersonalDetails', as
   }
 });
 
+export const savingsInclined = createAsyncThunk('user/savingsInclined', async (_, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().userauth.user.token;
+    return await userService.savingsInclined(token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const feedingInclined = createAsyncThunk('user/feedingInclined', async (_, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().userauth.user.token;
+    return await userService.feedingInclined(token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const logout =  createAsyncThunk('user/logout', async () => {
+	await userService.logout()
+})
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -456,8 +486,37 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-      });
-      
+      })
+      .addCase(savingsInclined.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(savingsInclined.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.userDetails = action.payload;
+      })
+      .addCase(savingsInclined.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(feedingInclined.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(feedingInclined.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.userDetails = action.payload;
+      })
+      .addCase(feedingInclined.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+			.addCase(logout.fulfilled, (state) => {
+				state.user = null
+			})
+   
   },
 });
 

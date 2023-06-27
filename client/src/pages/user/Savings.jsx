@@ -13,7 +13,7 @@ function Savings() {
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
-  const [targetDate, setTargetDate] = useState('');
+  const [targetDate, setTargetDate] = useState('some date');
 
 
   const handleAddIncome = () => {
@@ -28,7 +28,7 @@ function Savings() {
 
   useEffect(() => {
     if (isError) {
-      toast.error('We ran into a problem');
+      console.log('We ran into a problem');
     }
 
     const fetchData = async () => {
@@ -37,7 +37,7 @@ function Savings() {
         await dispatch(getAllSavings());
         await dispatch(getUserInfo());
       } catch (error) {
-        toast.error('Failed to fetch data');
+        console.log('Failed to fetch data');
       }
     };
 
@@ -61,11 +61,11 @@ function Savings() {
       .then(() => {
         setShowAddIncomeModal(false);
         toast.success('Saving created successfully');
-        window.location.reload(); // Not recommended, better to update state
+        navigate("/login") // Not recommended, better to update state
         // You can dispatch an action here to update the budgets state
       })
       .catch(() => {
-        toast.error('Failed to create saving');
+        console.log('Failed to create saving');
       });
   };
 
@@ -85,6 +85,13 @@ function Savings() {
     setShowAddExpenseModal(false);
   };
 
+  if(isLoading){
+    return <div className="flex items-center justify-center h-screen bg-blue-700">
+    <p className="text-white text-3xl font-bold">Loading PRIME...</p>
+  </div>
+  }
+
+
 
 
   return (
@@ -101,48 +108,84 @@ function Savings() {
         
       </div>
 
-      <div className="bg-blue-800 rounded-lg p-8">
-  <div className="flex items-center justify-center">
-    {/* <div className="rounded-full bg-white h-24 w-24 flex items-center justify-center">
-      <img src={useri} alt="User" className="rounded-full h-20 w-20" />
-    </div> */}
-  </div>
-  <p className="text-sm text-white text-center mt-4">You have Saved</p>
-  <p className="text-3xl font-bold text-white text-center mt-2">₦{userDetails?.savingsBalance?.toLocaleString()}</p>
-  <p className="text-md text-white opacity-75 text-center mt-2">
-    of ₦{userDetails?.desiredMonthlySavings} for the month
-  </p>
-  {/* <div className="flex justify-between items-center mt-4">
-    <button className="bg-yellow-500 w-full text-white px-4 py-2 rounded-full mr-2" >
-      Add To Savings
-    </button>
-  </div> */}
+     {userDetails?.savingFeeding != 0 && 
+         <div className="bg-blue-800 rounded-lg p-8">
+         <div className="flex items-center justify-center">
+           
+         </div>
+         <p className="text-sm text-white text-center mt-4">You have Saved</p>
+         <p className="text-3xl font-bold text-white text-center mt-2">₦{userDetails?.savingsBalance?.toLocaleString()}</p>
+         <p className="text-md text-white opacity-75 text-center mt-2">
+           of ₦{userDetails?.savingsBudget} for the month
+         </p>
+         
+       
+         {/* Progress Bar */}
+         <div className="bg-gray-300 h-2 rounded-lg mt-4">
+           <div
+             className="bg-green-500 h-full rounded-lg"
+             style={{
+               width: `${
+                 userDetails?.savingsBalance >= userDetails?.savingsBudget
+                   ? "100%"
+                   : `${(userDetails?.savingsBalance / userDetails?.savingsBudget) * 100}%`
+               }`,
+             }}
+           ></div>
+         </div>
+       
+         {/* Conditional Text */}
+         {userDetails?.savingsBalance >= userDetails?.savingsBudget ? (
+           <p className="text-md text-white text-center mt-4">Congratulations! You reached your savings goal.</p>
+         ) : userDetails?.savingsBalance >= userDetails?.savingsBudget * 0.75 ? (
+           <p className="text-md text-white text-center mt-4">Almost there! Keep going.</p>
+         ) : userDetails?.savingsBalance >= userDetails?.savingsBudget * 0.5 ? (
+           <p className="text-md text-white text-center mt-4">Halfway there. Keep up the good work.</p>
+         ) : userDetails?.savingsBalance >= userDetails?.savingsBudget * 0.25 ? (
+           <p className="text-md text-white text-center mt-4">Just getting started. Keep saving.</p>
+         ) : null}
+       </div>
+     }
 
-  {/* Progress Bar */}
-  <div className="bg-gray-300 h-2 rounded-lg mt-4">
-    <div
-      className="bg-green-500 h-full rounded-lg"
-      style={{
-        width: `${
-          userDetails?.savingsBalance >= userDetails?.desiredMonthlySavings
-            ? "100%"
-            : `${(userDetails?.savingsBalance / userDetails?.desiredMonthlySavings) * 100}%`
-        }`,
-      }}
-    ></div>
-  </div>
 
-  {/* Conditional Text */}
-  {userDetails?.savingsBalance >= userDetails?.desiredMonthlySavings ? (
-    <p className="text-md text-white text-center mt-4">Congratulations! You reached your savings goal.</p>
-  ) : userDetails?.savingsBalance >= userDetails?.desiredMonthlySavings * 0.75 ? (
-    <p className="text-md text-white text-center mt-4">Almost there! Keep going.</p>
-  ) : userDetails?.savingsBalance >= userDetails?.desiredMonthlySavings * 0.5 ? (
-    <p className="text-md text-white text-center mt-4">Halfway there. Keep up the good work.</p>
-  ) : userDetails?.savingsBalance >= userDetails?.desiredMonthlySavings * 0.25 ? (
-    <p className="text-md text-white text-center mt-4">Just getting started. Keep saving.</p>
-  ) : null}
-</div>
+      {userDetails?.feedingSavings != 0 && 
+         <div className="bg-blue-800 rounded-lg p-8">
+         <div className="flex items-center justify-center">
+           
+         </div>
+         <p className="text-sm text-white text-center mt-4">You have Saved</p>
+         <p className="text-3xl font-bold text-white text-center mt-2">₦{userDetails?.savingsBalance?.toLocaleString()}</p>
+         <p className="text-md text-white opacity-75 text-center mt-2">
+           of ₦{userDetails?.feedingSavings} for the month
+         </p>
+         
+       
+         {/* Progress Bar */}
+         <div className="bg-gray-300 h-2 rounded-lg mt-4">
+           <div
+             className="bg-green-500 h-full rounded-lg"
+             style={{
+               width: `${
+                 userDetails?.savingsBalance >= userDetails?.feedingSavings
+                   ? "100%"
+                   : `${(userDetails?.savingsBalance / userDetails?.feedingSavings) * 100}%`
+               }`,
+             }}
+           ></div>
+         </div>
+       
+         {/* Conditional Text */}
+         {userDetails?.savingsBalance >= userDetails?.feedingSavings ? (
+           <p className="text-md text-white text-center mt-4">Congratulations! You reached your savings goal.</p>
+         ) : userDetails?.savingsBalance >= userDetails?.feedingSavings * 0.75 ? (
+           <p className="text-md text-white text-center mt-4">Almost there! Keep going.</p>
+         ) : userDetails?.savingsBalance >= userDetails?.feedingSavings * 0.5 ? (
+           <p className="text-md text-white text-center mt-4">Halfway there. Keep up the good work.</p>
+         ) : userDetails?.savingsBalance >= userDetails?.feedingSavings * 0.25 ? (
+           <p className="text-md text-white text-center mt-4">Just getting started. Keep saving.</p>
+         ) : null}
+       </div>
+     }
 
 
       {/* Add Income Modal */}
@@ -165,13 +208,7 @@ function Savings() {
                 onChange={(e) => setAmount(e.target.value)}
                 className="bg-gray-100 px-4 py-2 rounded-lg mb-2 w-full"
               />
-              <input
-                type="date"
-                placeholder="Target Date"
-                value={targetDate}
-                onChange={(e) => setTargetDate(e.target.value)}
-                className="bg-gray-100 px-4 py-2 rounded-lg mb-4 w-full"
-              />
+             
               <div className="flex justify-between">
                 <button type="submit" className="bg-yellow-500 text-white px-4 py-2 rounded-lg">
                   Submit
@@ -208,9 +245,9 @@ function Savings() {
                   <p className="font-semibold text-white">{saving.name}</p>
                   <p className="text-green-500 font-bold">N{saving.amount}</p>
                 </div>
-                <div>
+                {/* <div>
                   <p className="text-white opacity-75">{saving.targetDate}</p>
-                </div>
+                </div> */}
               </div>
             ))}
           </div>

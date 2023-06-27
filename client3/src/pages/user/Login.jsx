@@ -22,7 +22,8 @@ function Login() {
 
   useEffect(() => {
     if (isError) {
-      toast.error("invalid credentials");
+      console.log("invalid credentials");
+      alert("invalid details")
     }
     if (isSuccess || user) {
       navigate('/home');

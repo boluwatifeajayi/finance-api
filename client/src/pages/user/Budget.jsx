@@ -26,7 +26,7 @@ function Budget() {
 
   useEffect(() => {
     if (isError) {
-      toast.error('We ran into a problem');
+      console.log('We ran into a problem');
     }
 
     const fetchData = async () => {
@@ -37,7 +37,7 @@ function Budget() {
         await dispatch(getAllIncomes());
         await dispatch(getUserInfo());
       } catch (error) {
-        toast.error('Failed to fetch data');
+        console.log('Failed to fetch data');
       }
     };
 
@@ -59,11 +59,11 @@ function Budget() {
       .then(() => {
         setShowAddIncomeModal(false);
         toast.success('Budget created successfully');
-        // window.location.reload(); // Not recommended, better to update state
+        // navigate("/login") // Not recommended, better to update state
         // You can dispatch an action here to update the budgets state
       })
       .catch(() => {
-        toast.error('Failed to create budget');
+        console.log('Failed to create budget');
       });
   };
 
@@ -76,6 +76,13 @@ function Budget() {
   const handleExpenseCancel = () => {
     setShowAddExpenseModal(false);
   };
+
+  if(isLoading){
+    return <div className="flex items-center justify-center h-screen bg-blue-700">
+    <p className="text-white text-3xl font-bold">Loading PRIME...</p>
+  </div>
+  }
+
 
   return (
     <div className="flex flex-col min-h-screen bg-blue-700 p-4 md:p-8">
@@ -91,22 +98,44 @@ function Budget() {
         
       </div>
 
-      <div className="bg-blue-800 rounded-lg p-8">
-        <div className="flex items-center justify-center">
-          {/* <div className="rounded-full bg-white h-24 w-24 flex items-center justify-center">
-            <img src={useri} alt="User" className="rounded-full h-20 w-20" />
-          </div> */}
-        </div>
-        {/* <p className="text-lg text-white text-center mt-4">Your Total Savings is</p> */}
-        <p className="text-3xl font-bold text-white text-center mt-2">₦{(userDetails?.monthlyBudget - totalExpenses)?.toLocaleString()} left</p>
-        <p className=" text-white text-center mt-4 opacity-75">Out of ₦{userDetails?.monthlyBudget} budgeted for the Month</p>
-        {/* <p className="text-sm text-white text-center mt-2">You are spending slightly higher this month than last month</p> */}
-        <div className="flex justify-between items-center mt-4">
-          <button className="bg-white w-full text-gray-900 px-4 py-2 rounded-full mr-2" onClick={handleAddIncome}>
-            + Set Up New Budget
-          </button>
-        </div>
-      </div>
+      {userDetails?.savingsFeeding != 0 && 
+  <div className="bg-blue-800 rounded-lg p-8">
+  <div className="flex items-center justify-center">
+    {/* <div className="rounded-full bg-white h-24 w-24 flex items-center justify-center">
+      <img src={useri} alt="User" className="rounded-full h-20 w-20" />
+    </div> */}
+  </div>
+  {/* <p className="text-lg text-white text-center mt-4">Your Total Savings is</p> */}
+  <p className="text-3xl font-bold text-white text-center mt-2">₦{(userDetails?.savingsFeeding - totalExpenses)?.toLocaleString()} left</p>
+  <p className=" text-white text-center mt-4 opacity-75">Out of ₦{userDetails?.savingsFeeding} budgeted for the Month</p>
+  {/* <p className="text-sm text-white text-center mt-2">You are spending slightly higher this month than last month</p> */}
+  <div className="flex justify-between items-center mt-4">
+  <button className="bg-white w-full text-gray-900 px-4 py-2 rounded-full mr-2">
+       You are More Inclined to Savings
+    </button>
+  </div>
+</div>
+}
+
+{userDetails?.feedingBudget != 0 && 
+  <div className="bg-blue-800 rounded-lg p-8">
+  <div className="flex items-center justify-center">
+    {/* <div className="rounded-full bg-white h-24 w-24 flex items-center justify-center">
+      <img src={useri} alt="User" className="rounded-full h-20 w-20" />
+    </div> */}
+  </div>
+  {/* <p className="text-lg text-white text-center mt-4">Your Total Savings is</p> */}
+  <p className="text-3xl font-bold text-white text-center mt-2">₦{(userDetails?.savingsFeeding - totalExpenses)?.toLocaleString()} left</p>
+  <p className=" text-white text-center mt-4 opacity-75">Out of ₦{userDetails?.savingsFeeding} budgeted for the Month</p>
+  {/* <p className="text-sm text-white text-center mt-2">You are spending slightly higher this month than last month</p> */}
+  <div className="flex justify-between items-center mt-4">
+  <button className="bg-white w-full text-gray-900 px-4 py-2 rounded-full mr-2">
+       You are More Inclined to feeding
+    </button>
+  </div>
+</div>
+}
+      
 
       {/* Add Income Modal */}
       {showAddIncomeModal && (

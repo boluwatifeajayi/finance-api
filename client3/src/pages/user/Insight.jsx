@@ -11,6 +11,7 @@ import axios from 'axios';
 
 function Insight() {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const [showAddIncomeModal, setShowAddIncomeModal] = useState(false);
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
   const [name, setName] = useState('');
@@ -38,7 +39,7 @@ function Insight() {
 
   useEffect(() => {
     if (isError) {
-      toast.error('We ran into a problem');
+      console.log('We ran into a problem');
     }
 
     const fetchData = async () => {
@@ -48,7 +49,7 @@ function Insight() {
         await dispatch(allVisuals());
         await dispatch(getUserInfo());
       } catch (error) {
-        toast.error('Failed to fetch data');
+        console.log('Failed to fetch data');
       }
     };
 
@@ -72,11 +73,11 @@ function Insight() {
       .then(() => {
         setShowAddIncomeModal(false);
         toast.success('Saving created successfully');
-        window.location.reload(); // Not recommended, better to update state
+        navigate("/login") // Not recommended, better to update state
         // You can dispatch an action here to update the budgets state
       })
       .catch(() => {
-        toast.error('Failed to create saving');
+        console.log('Failed to create saving');
       });
   };
 

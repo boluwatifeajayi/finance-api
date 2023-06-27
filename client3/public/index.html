@@ -39,5 +39,17 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('beforeinstallprompt', (event) => {
+          // Prevent Chrome 67 and earlier from automatically showing the prompt
+          event.preventDefault();
+          // Stash the event so it can be triggered later
+          window.deferredPrompt = event;
+          // Update UI notify the user they can add to home screen
+          // TODO: Show a button or other UI element to prompt the user to install the PWA
+        });
+      }
+    </script>
   </body>
 </html>
