@@ -33,10 +33,6 @@ const incomeSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  incomeTitle: {
-    type: String,
-    required: [true, 'Please add a name']
-  }
 });
 
 const budgetSchema = new Schema({
@@ -48,7 +44,7 @@ const budgetSchema = new Schema({
     type: String,
     required: [true, 'Please add a category']
   },
-  limit: {
+  budgetAmount: {
     type: Number,
     required: [true, 'Please add a limit']
   }
@@ -74,9 +70,21 @@ const goalSchema = new Schema({
 });
 
 const billReminderSchema = new Schema({
-  name: {
+  billName: {
     type: String,
     required: [true, 'Please add a name']
+  },
+  billFrequency: {
+    type: String,
+    required: [true, 'Please add a name']
+  },
+  billPrice: {
+    type: Number,
+    required: [true, 'Please add a name']
+  },
+  isBillPaid: {
+    type: Boolean,
+    default: false,
   },
   dueDate: {
     type: Date,
@@ -85,15 +93,15 @@ const billReminderSchema = new Schema({
 });
 
 const savingsSchema = new Schema({
-  name: {
+  savingsName: {
     type: String,
     required: [true, 'Please add a name']
   },
-  amount: {
+  saveAmount: {
     type: Number,
     required: [true, 'Please add a target amount']
   },
-  targetDate: {
+  savingsDate: {
     type: String,
     required: [true, 'Please add a date']
   }
@@ -113,60 +121,31 @@ const userSchema = new Schema({
     type: String,
     default: ''
   },
+  gender: {
+    type: String,
+    default: 'Male'
+  },
+  age: {
+    type: Number,
+    required: true
+  },
+  occupation: {
+    type: String,
+    required: true
+  },
+  monthlyIncome: {
+    type: Number,
+    required: true
+  },
   password: {
     type: String,
     required: [true, 'Please add a password']
-  },
-  feeding: {
-    type: Number,
-    default: 0
-  },
-  desiredMonthlySavings: {
-    type: Number,
-    default: 0
-  },
-
-  monthlyBudget: {
-    type: Number,
-    default: 0
-  },
-  mescellenious: {
-    type: Number,
-    defalt: 0
-  },
-
-  monthlyIncome: {
-    type: Number,
-    default: 0
-  },
-  pref: {
-    type: String,
-    default: "savings"
-  },
-  savingsBudget: {
-    type:Number,
-    default: 0
-  },
-  savingsFeeding: {
-    type:Number,
-    default: 0
-  },
-  feedingBudget: {
-    type:Number,
-    default: 0
-  },
-  feedingSavings: {
-    type: Number,
-    default: 0
   },
   balance: {
     type: Number,
     default: 0
   },
-  savingsBalance: {
-	  type: Number,
-	  default: 0
-  },
+
   expenses: [expenseSchema],
   incomes: [incomeSchema],
   budgets: [budgetSchema],

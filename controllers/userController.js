@@ -6,7 +6,7 @@ const User = require('../models/userModel')
 
 // Register user
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, firstname, lastname, password } = req.body;
+  const { email, firstname, lastname, password, gender, age, occupation, monthlyIncome } = req.body;
   if (!email || !password) {
     res.status(400);
     throw new Error('Please add all fields');
@@ -28,6 +28,10 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     firstname,
     lastname,
+    gender,
+    age,
+    occupation,
+    monthlyIncome,
     password: hashedPassword,
     savings: [],
     billReminders: [],
@@ -45,6 +49,9 @@ const registerUser = asyncHandler(async (req, res) => {
       firstname: user.firstname,
       email: user.email,
       lastname: user.lastname,
+      occupation: user.occupation,
+      gender: user.gender,
+      monthlyIncome: user.monthlyIncome,
       token: generateToken(user._id),
     });
   } else {
@@ -66,6 +73,9 @@ const loginUser = asyncHandler(async (req, res) => {
       firstname: user.firstname,
       email: user.email,
       lastname: user.lastname,
+      occupation: user.occupation,
+      gender: user.gender,
+      monthlyIncome: user.monthlyIncome,
       token: generateToken(user._id),
     });
   } else {
@@ -79,9 +89,9 @@ const getMe = asyncHandler(async (req, res) => {
   res.status(200).json(req.user);
 });
 
-// udate
+// update user
 const updateUserInfo = asyncHandler(async (req, res) => {
-  const { firstname, lastname, email } = req.body;
+  const { firstname, lastname, email, age, occupation, monthlyIncome, gender } = req.body;
 
   const user = await User.findById(req.user._id);
   if (!user) {
@@ -91,15 +101,29 @@ const updateUserInfo = asyncHandler(async (req, res) => {
 
   user.firstname = firstname || user.firstname;
   user.lastname = lastname || user.lastname;
-  user.email = email || user.email;
+  user.occupation = occupation || user.occupation;
+  user.age = age || user.age;
+  user.monthlyIncome = monthlyIncome || user.monthlyIncome;
+  user.gender = gender || user.gender;
 
   await user.save();
 
   res.status(200).json({
     message: 'User details updated successfully',
-    user,
+    user: {
+      _id: user._id,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      age: user.age,
+      occupation: user.occupation,
+      monthlyIncome: user.monthlyIncome,
+      gender: user.gender,
+      // Add any other relevant user details you want to return
+    },
   });
 });
+
 
 // Create an expense
 const createExpense = asyncHandler(async (req, res) => {
@@ -142,14 +166,13 @@ const createExpense = asyncHandler(async (req, res) => {
   
   // Create an income
   const createIncome = asyncHandler(async (req, res) => {
-    const { incomeAmount, incomeCategory, incomeDate, incomeTitle } = req.body;
+    const { incomeAmount, incomeCategory, incomeDate } = req.body;
   
     // Create income
     const income = {
       incomeAmount,
       incomeCategory,
       incomeDate,
-      incomeTitle
     };
   
     // Update user's balance by adding the income amount
@@ -203,6 +226,22 @@ const getAllExpenses = asyncHandler(async (req, res) => {
   res.status(200).json(userExpenses);
 });
 
+// Get all incomes and expenses for the specific user, sorted by date
+const getAllTransactions = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  const allTransactions = [...user.incomes, ...user.expenses];
+  // Sort the transactions by date in descending order (newest first)
+  allTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  res.status(200).json(allTransactions);
+});
+
+
 // user info
 const getUserInfo = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).populate('incomes').populate('expenses');
@@ -216,16 +255,16 @@ const getUserInfo = asyncHandler(async (req, res) => {
 
 
 const createSavings = asyncHandler(async (req, res) => {
-  const { amount, name, targetDate } = req.body;
+  const { savingsName, saveAmount, savingsDate } = req.body;
 
   // Convert amount to a number
-  const savingsAmount = parseFloat(amount);
+  const savingsAmount = parseFloat(saveAmount);
 
   // Create savings
   const savings = {
-    amount: savingsAmount,
-    name,
-    targetDate,
+    saveAmount: savingsAmount,
+    savingsName,
+    savingsDate,
   };
 
   // Add the savings to the user's savings array
@@ -246,7 +285,7 @@ const createSavings = asyncHandler(async (req, res) => {
   await user.save();
 
   // Set a timeout to update the balances after the target date has elapsed
-  const targetTime = new Date(targetDate).getTime();
+  const targetTime = new Date(savingsDate).getTime();
   const currentTime = Date.now();
   const timeDifference = targetTime - currentTime;
 
@@ -267,10 +306,10 @@ const createSavings = asyncHandler(async (req, res) => {
       }
 
       // Subtract the savings amount from the user's savings balance
-      updatedUser.savingsBalance -= updatedSavings.amount;
+      updatedUser.savingsBalance -= updatedSavings.saveAmount;
 
       // Add the savings amount back to the user's balance
-      updatedUser.balance += updatedSavings.amount;
+      updatedUser.balance += updatedSavings.saveAmount;
 
       await updatedUser.save();
     }, timeDifference);
@@ -297,13 +336,14 @@ const getAllSavings = asyncHandler(async (req, res) => {
 
 // Create a bill reminder
 const createBillReminder = asyncHandler(async (req, res) => {
-  const { amount, name, dueDate } = req.body;
+  const { billName, billFrequency, billPrice, dueDate } = req.body;
 
   // Create bill reminder
   const billReminder = {
-    amount,
-    name,
-    dueDate,
+    billName,
+    billFrequency,
+    billPrice,
+    dueDate
   };
 
   // Add the bill reminder to the user's bill reminders array
@@ -336,11 +376,11 @@ const getAllBillReminders = asyncHandler(async (req, res) => {
 
 // Create a budget
 const createBudget = asyncHandler(async (req, res) => {
-  const { limit, budgetCategory, budgetTitle  } = req.body;
+  const { budgetAmount, budgetCategory, budgetTitle  } = req.body;
 
   // Create budget
   const budget = {
-    limit,
+    budgetAmount,
     budgetCategory,
     budgetTitle
   };
@@ -514,4 +554,5 @@ module.exports = {
   updateUserInfo,
   savingsInclined,
   feedingInclined,
+  getAllTransactions,
 };
