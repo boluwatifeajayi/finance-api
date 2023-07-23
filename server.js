@@ -2,7 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv').config();
 const connectDB = require('./config/database');
 const { errorHandler } = require('./middlewares/errorMiddleware');
-const cors = require('cors'); // Updated: Removed the 'whiteList' and 'corsOption'
+const cors = require('cors');
 const path = require('path');
 const settings = 'production';
 const morgan = require('morgan');
@@ -12,8 +12,19 @@ connectDB();
 const port = process.env.PORT || 4070;
 const app = express();
 
-// Removed: No need to specify specific origins anymore
-app.use(cors()); // Updated: Using a simpler cors() function
+// Allow requests from localhost:3000
+const allowedOrigins = ['http://localhost:3000'];
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
 
 if (settings === 'development') {
   app.use(morgan('dev'));
