@@ -124,85 +124,120 @@ const updateUserInfo = asyncHandler(async (req, res) => {
   });
 });
 
-
 // Create an expense
 const createExpense = asyncHandler(async (req, res) => {
-  const { expenseAmount, expenseCategory, expenseDate, expenseTitle } = req.body;
+  const { expenseAmount, expenseCategory, expenseDate, expenseTitle, selectedAccount } = req.body;
 
-  // Create expense
-  const expense = {
-    expenseAmount,
-    expenseCategory,
-    expenseDate,
-    expenseTitle
-  };
+  const parsedExpenseAmount = parseFloat(expenseAmount);
+  if (isNaN(parsedExpenseAmount)) {
+    res.status(400);
+    throw new Error('Invalid expense amount');
+  }
 
-  // Update user's balance by subtracting the expense amount
   const user = await User.findById(req.user._id);
   if (!user) {
     res.status(404);
     throw new Error('User not found');
   }
 
-  const parsedExpenseAmount = parseFloat(expenseAmount); // Convert expense amount to a number
-  if (isNaN(parsedExpenseAmount)) {
+  // Check if the user has at least one bank account
+  if (user.bankAccounts.length === 0) {
     res.status(400);
-    throw new Error('Invalid expense amount');
+    throw new Error('No bank account found. Please add a bank account before creating an expense.');
   }
 
+  // Find the selected bank account by account name
+  const selectedBankAccount = user.bankAccounts.find(account => account.accountName === selectedAccount);
+  if (!selectedBankAccount) {
+    res.status(400);
+    throw new Error('Selected bank account not found');
+  }
+
+  // Deduct the expense amount from the selected bank account
+  selectedBankAccount.bankAmount -= parsedExpenseAmount;
+
+  // Update the user's balance
   user.balance -= parsedExpenseAmount;
 
   // Add the expense to the user's expenses array
-  user.expenses.push(expense);
+  user.expenses.push({
+    expenseAmount: parsedExpenseAmount,
+    expenseCategory,
+    expenseDate,
+    expenseTitle
+  });
 
   await user.save();
 
   res.status(201).json({
-    expense,
+    expense: {
+      expenseAmount: parsedExpenseAmount,
+      expenseCategory,
+      expenseDate,
+      expenseTitle,
+    },
     balance: user.balance,
   });
 });
 
-  
-  // Create an income
-  const createIncome = asyncHandler(async (req, res) => {
-    const { incomeAmount, incomeCategory, incomeDate } = req.body;
-  
-    // Create income
-    const income = {
-      incomeAmount,
+// Create an income
+const createIncome = asyncHandler(async (req, res) => {
+  const { incomeAmount, incomeCategory, incomeDate, selectedAccount } = req.body;
+
+  const parsedIncomeAmount = parseFloat(incomeAmount);
+  if (isNaN(parsedIncomeAmount)) {
+    res.status(400);
+    throw new Error('Invalid income amount');
+  }
+
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  // Check if the user has at least one bank account
+  if (user.bankAccounts.length === 0) {
+    res.status(400);
+    throw new Error('No bank account found. Please add a bank account before creating an income.');
+  }
+
+  // Find the selected bank account by account name
+  const selectedBankAccount = user.bankAccounts.find(account => account.accountName === selectedAccount);
+  if (!selectedBankAccount) {
+    res.status(400);
+    throw new Error('Selected bank account not found');
+  }
+
+  // Add the income amount to the selected bank account
+  selectedBankAccount.bankAmount += parsedIncomeAmount;
+
+  // Update the user's balance
+  user.balance += parsedIncomeAmount;
+
+  // Add the income to the user's incomes array
+  user.incomes.push({
+    incomeAmount: parsedIncomeAmount,
+    incomeCategory,
+    incomeDate,
+  });
+
+  await user.save();
+
+  res.status(201).json({
+    income: {
+      incomeAmount: parsedIncomeAmount,
       incomeCategory,
       incomeDate,
-    };
-  
-    // Update user's balance by adding the income amount
-    const user = await User.findById(req.user._id);
-    if (!user) {
-      res.status(404);
-      throw new Error('User not found');
-    }
-  
-    const parsedIncomeAmount = parseFloat(incomeAmount); // Convert income amount to a number
-    if (isNaN(parsedIncomeAmount)) {
-      res.status(400);
-      throw new Error('Invalid income amount');
-    }
-  
-    user.balance += parsedIncomeAmount;
-  
-    // Add the income to the user's incomes array
-    user.incomes.push(income);
-  
-    await user.save();
-  
-    res.status(201).json({
-      income,
-      balance: user.balance,
-    });
+    },
+    balance: user.balance,
   });
-  
-  
- // Get all incomes for the specific user
+});
+
+
+
+
+// Get all incomes for the specific user
 const getAllIncomes = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   if (!user) {
@@ -225,6 +260,8 @@ const getAllExpenses = asyncHandler(async (req, res) => {
   const userExpenses = user.expenses;
   res.status(200).json(userExpenses);
 });
+
+
 
 // Get all incomes and expenses for the specific user, sorted by date
 const getAllTransactions = asyncHandler(async (req, res) => {
@@ -525,6 +562,62 @@ const feedingInclined = asyncHandler(async (req, res) => {
   });
 });
 
+// add bank
+const addBankAccount = asyncHandler(async (req, res) => {
+  const { accountName, bankAmount, accountNumber } = req.body;
+
+  if (!accountName || !bankAmount || !accountNumber) {
+    res.status(400);
+    throw new Error('Please provide an account name, amount, and account number');
+  }
+
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  // Check if the accountNumber already exists
+  const existingAccount = user.bankAccounts.find(account => account.accountName === accountName);
+  if (existingAccount) {
+    res.status(400);
+    throw new Error('Account already exists');
+  }
+
+  // Add the new bank account to the bankAccounts array
+  user.bankAccounts.push({
+    accountName,
+    bankAmount,
+    accountNumber
+  });
+
+  await user.save();
+
+  res.status(201).json({
+    message: 'Bank account added successfully',
+    bankAccount: {
+      accountName,
+      bankAmount,
+      accountNumber
+    },
+  });
+});
+
+
+
+// get all banks 
+const getAllBankAccounts = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  const bankAccounts = user.bankAccounts;
+  res.status(200).json(bankAccounts);
+});
+
+
 
 // Generate JWT
 const generateToken = (userid) => {
@@ -555,4 +648,6 @@ module.exports = {
   savingsInclined,
   feedingInclined,
   getAllTransactions,
+  addBankAccount,
+  getAllBankAccounts
 };

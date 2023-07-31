@@ -12,19 +12,8 @@ connectDB();
 const port = process.env.PORT || 4070;
 const app = express();
 
-// Allow requests from localhost:3000
-const allowedOrigins = ['http://localhost:3000'];
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-};
-
-app.use(cors(corsOptions));
+// Allow requests from any client from any origin
+app.use(cors());
 
 if (settings === 'development') {
   app.use(morgan('dev'));

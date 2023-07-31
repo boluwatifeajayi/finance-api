@@ -107,6 +107,25 @@ const savingsSchema = new Schema({
   }
 });
 
+const bankAccountSchema = new Schema({
+ 
+      accountName: {
+        type: String,
+        required: [true, 'Please add an account name']
+      },
+      accountNumber: {
+        type: Number,
+        required: [true, 'Please add an account name']
+      },
+      bankAmount: {
+        type: Number,
+        required: [true, 'Please add an amount'],
+        default: 0
+      }
+ 
+});
+
+
 const userSchema = new Schema({
   email: {
     type: String,
@@ -151,7 +170,8 @@ const userSchema = new Schema({
   budgets: [budgetSchema],
   goals: [goalSchema],
   billReminders: [billReminderSchema],
-  savings: [savingsSchema]
+  savings: [savingsSchema],
+  bankAccounts: [bankAccountSchema],
 }, {
   timestamps: true
 });
