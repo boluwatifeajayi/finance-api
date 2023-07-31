@@ -144,10 +144,7 @@ const userSchema = new Schema({
     type: String,
     default: 'Male'
   },
-  age: {
-    type: Number,
-    required: true
-  },
+ 
   occupation: {
     type: String,
     required: true

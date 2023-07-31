@@ -6,7 +6,7 @@ const User = require('../models/userModel')
 
 // Register user
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, firstname, lastname, password, gender, age, occupation, monthlyIncome } = req.body;
+  const { email, firstname, lastname, password, gender, occupation, monthlyIncome } = req.body;
   if (!email || !password) {
     res.status(400);
     throw new Error('Please add all fields');
@@ -29,7 +29,7 @@ const registerUser = asyncHandler(async (req, res) => {
     firstname,
     lastname,
     gender,
-    age,
+    
     occupation,
     monthlyIncome,
     password: hashedPassword,
