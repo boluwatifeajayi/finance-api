@@ -126,7 +126,7 @@ const updateUserInfo = asyncHandler(async (req, res) => {
 
 // Create an expense
 const createExpense = asyncHandler(async (req, res) => {
-  const { expenseAmount, expenseCategory, expenseDate, expenseTitle, selectedAccount } = req.body;
+  const { expenseAmount, expenseCategory, expenseDate, expenseName, selectedAccount } = req.body;
 
   const parsedExpenseAmount = parseFloat(expenseAmount);
   if (isNaN(parsedExpenseAmount)) {
@@ -164,7 +164,7 @@ const createExpense = asyncHandler(async (req, res) => {
     expenseAmount: parsedExpenseAmount,
     expenseCategory,
     expenseDate,
-    expenseTitle
+    expenseName
   });
 
   await user.save();
@@ -174,7 +174,7 @@ const createExpense = asyncHandler(async (req, res) => {
       expenseAmount: parsedExpenseAmount,
       expenseCategory,
       expenseDate,
-      expenseTitle,
+      expenseName,
     },
     balance: user.balance,
   });
@@ -182,7 +182,7 @@ const createExpense = asyncHandler(async (req, res) => {
 
 // Create an income
 const createIncome = asyncHandler(async (req, res) => {
-  const { incomeAmount, incomeCategory, incomeDate, selectedAccount } = req.body;
+  const { incomeAmount, incomeCategory, incomeDate, selectedAccount, incomeName } = req.body;
 
   const parsedIncomeAmount = parseFloat(incomeAmount);
   if (isNaN(parsedIncomeAmount)) {
@@ -220,6 +220,7 @@ const createIncome = asyncHandler(async (req, res) => {
     incomeAmount: parsedIncomeAmount,
     incomeCategory,
     incomeDate,
+    incomeName
   });
 
   await user.save();
@@ -229,6 +230,7 @@ const createIncome = asyncHandler(async (req, res) => {
       incomeAmount: parsedIncomeAmount,
       incomeCategory,
       incomeDate,
+      incomeName
     },
     balance: user.balance,
   });
@@ -236,47 +238,66 @@ const createIncome = asyncHandler(async (req, res) => {
 
 
 
-
 // Get all incomes for the specific user
 const getAllIncomes = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id).populate('incomes.bankAccount', 'accountName');
   if (!user) {
     res.status(404);
     throw new Error('User not found');
   }
 
-  const userIncomes = user.incomes;
+  const userIncomes = user.incomes.map(income => ({
+    ...income.toObject(),
+    bankAccount: income.bankAccount.accountName
+  }));
+  
   res.status(200).json(userIncomes);
 });
 
 // Get all expenses for the specific user
 const getAllExpenses = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id).populate('expenses.bankAccount', 'accountName');
   if (!user) {
     res.status(404);
     throw new Error('User not found');
   }
 
-  const userExpenses = user.expenses;
+  const userExpenses = user.expenses.map(expense => ({
+    ...expense.toObject(),
+    bankAccount: expense.bankAccount.accountName
+  }));
+  
   res.status(200).json(userExpenses);
 });
 
 
 
 // Get all incomes and expenses for the specific user, sorted by date
+// Get all incomes and expenses for the specific user sorted by date
 const getAllTransactions = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id).populate('incomes.bankAccount expenses.bankAccount', 'accountName');
   if (!user) {
     res.status(404);
     throw new Error('User not found');
   }
 
   const allTransactions = [...user.incomes, ...user.expenses];
+
   // Sort the transactions by date in descending order (newest first)
   allTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  res.status(200).json(allTransactions);
+  // Map transactions to include bank account information
+  const transactionsWithBank = allTransactions.map(transaction => {
+    const bankAccountName = transaction.bankAccount ? transaction.bankAccount.accountName : null;
+    return {
+      ...transaction.toObject(),
+      bankAccount: bankAccountName
+    };
+  });
+
+  res.status(200).json(transactionsWithBank);
 });
+
 
 
 // user info
@@ -584,15 +605,22 @@ const addBankAccount = asyncHandler(async (req, res) => {
     throw new Error('Account already exists');
   }
 
+  // Parse the bankAmount to a number before adding to the user's balance
+  const parsedBankAmount = parseFloat(bankAmount);
+  if (isNaN(parsedBankAmount)) {
+    res.status(400);
+    throw new Error('Invalid bank amount');
+  }
+
   // Add the new bank account to the bankAccounts array
   user.bankAccounts.push({
     accountName,
-    bankAmount,
+    bankAmount: parsedBankAmount, // Use the parsed bankAmount
     accountNumber
   });
 
   // Update the user's balance with the new bankAmount
-  user.balance += bankAmount;
+  user.balance += parsedBankAmount;
 
   await user.save();
 
@@ -600,10 +628,10 @@ const addBankAccount = asyncHandler(async (req, res) => {
     message: 'Bank account added successfully',
     bankAccount: {
       accountName,
-      bankAmount,
+      bankAmount: parsedBankAmount, // Use the parsed bankAmount in the response
       accountNumber
     },
-    balance: user.balance, // Include the updated balance in the response
+    balance: user.balance,
   });
 });
 

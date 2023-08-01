@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, getMe, createExpense, createIncome, getAllIncomes, getAllExpenses, getUserInfo, createSavings, getAllSavings, createBillReminder, getAllBillReminders, createBudget, getAllBudgets, createGoal, getAllGoals, personalDetails, updateUserInfo, savingsInclined, feedingInclined, addBankAccount, getAllBankAccounts } = require('../controllers/userController');
+const { registerUser, loginUser, getMe, createExpense, createIncome, getAllIncomes, getAllExpenses, getUserInfo, createSavings, getAllSavings, createBillReminder, getAllBillReminders, createBudget, getAllBudgets, createGoal, getAllGoals, personalDetails, updateUserInfo, savingsInclined, feedingInclined, addBankAccount, getAllBankAccounts, getAllTransactions } = require('../controllers/userController');
 const { protect } = require('../middlewares/userAuthMiddleware');
 
 // Existing routes
@@ -29,6 +29,9 @@ router.put('/feeding-inclined', protect, feedingInclined);
 // New routes for bank accounts
 router.post('/bankaccounts', protect, addBankAccount);
 router.get('/bankaccounts', protect, getAllBankAccounts);
+
+// New route for getting all transactions
+router.get('/transactions', protect, getAllTransactions);
 
 // New routes for reporting and analytics
 router.get('/reports/expenses', protect, (req, res) => {

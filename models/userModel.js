@@ -14,10 +14,11 @@ const expenseSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  expenseTitle: {
+  expenseName: {
     type: String,
-    required: [true, 'Please add a name']
+    required: [true, 'Please add a category']
   }
+  
 });
 
 const incomeSchema = new Schema({
@@ -33,6 +34,10 @@ const incomeSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  incomeName: {
+    type: String,
+    required: [true, 'Please add a category']
+  }
 });
 
 const budgetSchema = new Schema({
