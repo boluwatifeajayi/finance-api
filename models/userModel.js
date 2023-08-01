@@ -173,6 +173,38 @@ const userSchema = new Schema({
   timestamps: true
 });
 
+
+// Custom method to update the balance from bankAccounts
+userSchema.methods.updateBalanceFromBankAccounts = function () {
+  // Calculate total bankAmount from bankAccounts array
+  const totalBankAmount = this.bankAccounts.reduce((acc, account) => acc + account.bankAmount, 0);
+
+  // Update the balance with the total bankAmount
+  this.balance = totalBankAmount;
+};
+
+// Custom method to add income
+userSchema.methods.addIncome = async function (incomeData) {
+  // Add the new income to the incomes array
+  this.incomes.push(incomeData);
+  // Update the balance based on the new income amount
+  this.balance += incomeData.incomeAmount;
+  // Save the changes to the user document
+  await this.save();
+};
+
+// Custom method to add expense
+userSchema.methods.addExpense = async function (expenseData) {
+  // Add the new expense to the expenses array
+  this.expenses.push(expenseData);
+  // Update the balance based on the new expense amount
+  this.balance -= expenseData.expenseAmount;
+  // Save the changes to the user document
+  await this.save();
+};
+
+
+
 // Custom methods to generate reports and provide analytics
 userSchema.methods.generateExpenseReport = function() {
   // Calculate total expenses
@@ -187,6 +219,8 @@ userSchema.methods.generateExpenseReport = function() {
 
   return report;
 };
+
+
 
 userSchema.methods.generateBudgetReport = function() {
   // Calculate total budget limits
