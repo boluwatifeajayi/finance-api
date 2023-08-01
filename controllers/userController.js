@@ -562,7 +562,7 @@ const feedingInclined = asyncHandler(async (req, res) => {
   });
 });
 
-// add bank
+// add bank account
 const addBankAccount = asyncHandler(async (req, res) => {
   const { accountName, bankAmount, accountNumber } = req.body;
 
@@ -591,6 +591,9 @@ const addBankAccount = asyncHandler(async (req, res) => {
     accountNumber
   });
 
+  // Update the user's balance with the new bankAmount
+  user.balance += bankAmount;
+
   await user.save();
 
   res.status(201).json({
@@ -600,6 +603,7 @@ const addBankAccount = asyncHandler(async (req, res) => {
       bankAmount,
       accountNumber
     },
+    balance: user.balance, // Include the updated balance in the response
   });
 });
 
