@@ -275,27 +275,17 @@ const getAllExpenses = asyncHandler(async (req, res) => {
 // Get all incomes and expenses for the specific user, sorted by date
 // Get all incomes and expenses for the specific user sorted by date
 const getAllTransactions = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id).populate('incomes.bankAccount expenses.bankAccount', 'accountName');
+  const user = await User.findById(req.user._id);
   if (!user) {
     res.status(404);
     throw new Error('User not found');
   }
 
   const allTransactions = [...user.incomes, ...user.expenses];
-
   // Sort the transactions by date in descending order (newest first)
   allTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  // Map transactions to include bank account information
-  const transactionsWithBank = allTransactions.map(transaction => {
-    const bankAccountName = transaction.bankAccount ? transaction.bankAccount.accountName : null;
-    return {
-      ...transaction.toObject(),
-      bankAccount: bankAccountName
-    };
-  });
-
-  res.status(200).json(transactionsWithBank);
+  res.status(200).json(allTransactions);
 });
 
 
