@@ -16,7 +16,7 @@ const expenseSchema = new Schema({
   },
   expenseName: {
     type: String,
-    required: [true, 'Please add a category']
+    required: [true, 'Please add a categoryyyy']
   }
   
 });
