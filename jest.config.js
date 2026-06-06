@@ -1,0 +1,8 @@
+module.exports = {
+  testEnvironment: 'node',
+  testMatch: ['**/tests/**/*.test.js'],
+  testTimeout: 120000,
+  forceExit: true,
+  cache: false,
+  transform: {},
+};
